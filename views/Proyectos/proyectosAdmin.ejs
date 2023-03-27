@@ -124,7 +124,7 @@
     function confirmDelete(folio){
         Swal.fire({
             title: '¿ESTAS SEGURO?',
-            text: `Se eliminará el servicio ${folio}`,
+            text: `Se eliminará el proyecto ${folio}`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -132,7 +132,7 @@
             confirmButtonText: 'Elimiar'
             }).then((result) => {
             if (result.isConfirmed) {
-                const ruta = `/deleteServicio/${folio}`
+                const ruta = `/deleteProyectoGrl?proyecto=${folio}`
                 window.location = ruta
             }
         })

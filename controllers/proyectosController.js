@@ -261,7 +261,109 @@ exports.deleteProyectoUbicacion = async(req, res, next)=>{
         return next()
     }
 }
+exports.deleteProyectoGrl = async(req, res, next)=>{
+    try {
+        const proyecto = req.query.proyecto
+        const ruta = `adminproyectos`
 
+        //VALIDAMOS COTIZACIONES
+        conexion.query("SELECT folio FROM cat013_cotizaciones WHERE proyecto = ?", [proyecto], (error, fila)=>{
+            if(error){
+                throw error
+            }else{
+                if(fila.length === 0){
+                    //Validamos claves de seguimeinto
+                    conexion.query("SELECT folio FROM cat021_claves_seguimiento WHERE proyecto = ?", [proyecto], (error2, fila2)=>{
+                        if(error2){
+                            throw error2
+                        }else{
+                            if(fila2.length === 0){
+                                //Validamos etapas
+                                conexion.query("SELECT folio FROM op002_etapas WHERE proyecto = ?", [proyecto], (error3, fila3)=>{
+                                    if(error3){
+                                        throw error3
+                                    }else{
+                                        if(fila3.length === 0){
+                                            //Validamos roles
+                                            conexion.query("SELECT folio FROM op005_roles WHERE proyecto = ?", [proyecto], (error4, fila4)=>{
+                                                if(error4){
+                                                    throw error4
+                                                }else{
+                                                    if(fila4.length === 0){
+                                                        //Validamos asistencia
+                                                        conexion.query("SELECT folio FROM op006_asistencia WHERE proyecto = ?", [proyecto], (error5, fila5)=>{
+                                                            if(error5){
+                                                                throw error5
+                                                            }else{
+                                                                if(fila5.length === 0){
+                                                                    //Validamos material en proyecto
+                                                                    conexion.query("SELECT folio FROM op011_material_proyecto WHERE proyecto = ?", [proyecto], (error6, fila6)=>{
+                                                                        if(error6){
+                                                                            throw error6
+                                                                        }else{
+                                                                            if(fila6.length === 0){
+                                                                                //Validamos presupuesto
+                                                                                conexion.query("SELECT folio FROM op012_presupuesto_proyecto WHERE proyecto = ?", [proyecto], (error7, fila7)=>{
+                                                                                    if(error7){
+                                                                                        throw error7
+                                                                                    }else{
+                                                                                        if(fila7.length === 0){
+                                                                                            //Eliminamos
+                                                                                            conexion.query("DELETE FROM cat009_proyectos WHERE folio = ?", [proyecto], (error8, fila8)=>{
+                                                                                                if(error8){
+                                                                                                    throw error8
+                                                                                                }else{
+                                                                                                    res.redirect(`/${ruta}`)
+                                                                                                    return next()
+                                                                                                }
+                                                                                            })
+                                                                                        }else{
+                                                                                            showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues tiene un presupuesto definido`, ruta)
+                                                                                            return next()
+                                                                                        }
+                                                                                    }
+                                                                                })
+                                                                            }else{
+                                                                                showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues hay material en el proyecto`, ruta)
+                                                                                return next()
+                                                                            }
+                                                                        }
+                                                                    })
+                                                                }else{
+                                                                    showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues tiene un registro de asistencia`, ruta)
+                                                                    return next()
+                                                                }
+                                                            }
+                                                        })
+                                                    }else{
+                                                        showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues tiene roles asignados`, ruta)
+                                                        return next()
+                                                    }
+                                                }
+                                            })
+                                        }else{
+                                            showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues tiene etapas definidas`, ruta)
+                                            return next()
+                                        }
+                                    }
+                                })
+                            }else{
+                                showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues ya se otorgaron viaticos`, ruta)
+                                return next()
+                            }
+                        }
+                    })
+                }else{
+                    showError(res, 'Error eliminando proyecto', `El proyecto ${proyecto} no se pudo eliminar pues ya esta cotizado`, ruta)
+                    return next()
+                }
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        return next()
+    }
+}
 //Gestion de etapas en perfil del proyecto
 exports.addEtapa = async(req, res, next)=>{
     try {

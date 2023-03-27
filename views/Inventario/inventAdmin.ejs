@@ -63,8 +63,8 @@
                                                 <td>
                                                     <div class="button-list">
                                                         <div class="btn-group btn-group-justified">
-                                                            <button class="btn btn-primary btn-sm" onclick="editServicio('<%= item.folio %>')"><i class="ti-pencil"></i></button>
-                                                            <button class="btn btn-danger btn-sm" onclick="confirmDelete('<%= item.folio %>')"><i class="ti-trash"></i></button>
+                                                            <button class="btn btn-primary btn-sm" onclick="editRegistro('<%= item.folio %>', '<%= item.folio_producto %>', '<%= item.cantidad %>', '<%= item.folio_unidad %>', '<%= user.folio %>')"><i class="ti-pencil"></i></button>
+                                                            <button class="btn btn-danger btn-sm" onclick="confirmDelete('<%= item.folio %>', '<%= item.folio_producto %>', '<%= item.cantidad %>', '<%= item.folio_unidad %>', '<%= user.folio %>')"><i class="ti-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 </td>   
@@ -112,14 +112,35 @@
             }
         })
     }
-    function editServicio(folio){
-        const ruta = `/editarservicio/${folio}`
-        window.location = ruta
+    function editRegistro(registro, producto, cantidad, unidades, user){
+        Swal.fire({
+            title: 'Modificar la cantidad del producto en el inventario',
+            input: 'number',
+            icon: 'info',
+            inputLabel: 'Ingrese la nueva cantidad, recuerde que la adicion o resta de inventario se registra en el reporte',
+            showCancelButton: true,
+            inputValue: cantidad,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Tienes que escribir algo'
+                }else if(parseInt(value) < 0){
+                    return 'No puede haber existencias negativas'
+                }else{
+                    if(parseInt(value) === 0){
+                        const ruta = `/deleteFromInvent?registro=${registro}&producto=${producto}&cantidad=${cantidad}&unidades=${unidades}&usuario=${user}`
+                        window.location = ruta
+                    }else{
+                        const ruta = `/modificarInvent?registro=${registro}&producto=${producto}&cantidadActual=${cantidad}&nuevaCantidad=${value}&unidades=${unidades}&usuario=${user}`
+                        window.location = ruta
+                    }
+                }
+            }
+        })
     }
-    function confirmDelete(folio){
+    function confirmDelete(registro, producto, cantidad, unidades, user){
         Swal.fire({
             title: '¿ESTAS SEGURO?',
-            text: `Se eliminará el servicio ${folio}`,
+            text: `Se eliminará el producto ${registro} del inventario`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -127,7 +148,7 @@
             confirmButtonText: 'Elimiar'
             }).then((result) => {
             if (result.isConfirmed) {
-                const ruta = `/deleteServicio/${folio}`
+                const ruta = `/deleteFromInvent?registro=${registro}&producto=${producto}&cantidad=${cantidad}&unidades=${unidades}&usuario=${user}`
                 window.location = ruta
             }
         })

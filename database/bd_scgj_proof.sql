@@ -1,11 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 31-10-2022 a las 23:14:47
--- Versión del servidor: 10.4.25-MariaDB
--- Versión de PHP: 8.1.10
+CREATE DATABASE bd_scgj_proof;
+USE bd_scgj_proof;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -16,10 +10,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de datos: `bd_scgj_proof`
---
 
 -- --------------------------------------------------------
 
@@ -1001,7 +991,7 @@ CREATE TABLE `op017_cotizacion_pdf` (
   `destinatario` varchar(255) COLLATE utf8mb4_spanish2_ci DEFAULT '[DESTINATARIO]',
   `total` double DEFAULT NULL,
   `solicita` varchar(255) COLLATE utf8mb4_spanish2_ci DEFAULT '[SOLICITA]',
-  `notas` text COLLATE utf8mb4_spanish2_ci DEFAULT '[INSERTE NOTAS]',
+  `notas` text COLLATE utf8mb4_spanish2_ci,
   `emite` int(2) DEFAULT 1,
   `puesto_destinatario` varchar(255) COLLATE utf8mb4_spanish2_ci DEFAULT '[PUESTO DE DESTINATARIO]',
   `cliente` varchar(255) COLLATE utf8mb4_spanish2_ci DEFAULT '[CLIENTE]',

@@ -2,6 +2,8 @@ const conexion = require('../database/db')
 const {promisify} = require('util')
 const { query } = require('../database/db')
 const { nextTick } = require('process')
+const formidable = require('formidable')
+const { path } = require('pdfkit')
 
 function calculateRutaProy(cliente, ubicacion, proyecto, flag, permisos){
     let ruta = '';
@@ -557,11 +559,36 @@ function showError(res, titulo, mensaje, ruta){
     }
     exports.loadTicket = async(req, res, next)=>{
         try {
+            //Recibimos primero el tipo de enlace que estamos recibiendo
+            let tipoComprobante = req.body.tipoComprobante;
+            let enlace;
+            let emisor = req.body.emisor;
+            console.log('emisor is: ' + emisor);
+            /* if(tipoComprobante != 2){
+                //Si recibimos ticket o factura primero la guardamos en el servidor
+                let form = formidable({})
+                const uploadFolder = '../public/files/'+emisor+'/';
+
+                form.multiples = true;
+                form.maxFileSize = 50 * 1024 * 1024
+                form.uploadDir = uploadFolder; 
+
+                console.log(form)
+                /* form.parse(req, (err, fields, files)=>{
+
+                }).on('fileBegin', (name, file)=>{
+                    enlace =  + file.name;
+                    file.path = enlace;
+                }).on('file', (name, file)=>{
+                    console.log('File uploaded');
+                }) */
+            
+
             let data = {
                 tipo_operacion: 2,
                 beneficiario: req.body.beneficiario,
                 emisor: req.body.emisor,
-                enlace: req.body.enlace,
+                enlace: req.body.file,
                 concepto: req.body.concepto,
                 clave: req.body.clave,
                 fecha: req.body.fecha,

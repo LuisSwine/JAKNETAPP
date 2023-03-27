@@ -363,3 +363,76 @@ exports.modificarInventProy = async(req, res, next)=>{
         return next()
     }
 }
+exports.editFromInvent = async(req, res, next)=>{
+    try {
+        //Calculamos el movimiento
+        let registro = req.query.registro
+        let actual = req.query.cantidadActual
+        let nueva = req.query.nuevaCantidad
+        //Recibimos los datos
+        let movimiento = {
+            usuario: req.query.usuario,
+            producto: req.query.producto,
+            cantidad: nueva - actual,
+            fecha: new Date()
+        }
+        if(actual == nueva){
+            res.redirect(`/admininventario`)
+            return next()
+        }else{
+            //Primero registramos el movimiento
+            conexion.query('INSERT INTO op016_movimientos_inventario SET ?', movimiento, (error, fila)=>{
+                if(error){
+                    throw error
+                }else{
+                    //Hacemos el update en el inventario
+                    conexion.query('UPDATE cat020_inventario SET cantidad = ? WHERE folio = ?', [nueva, registro], (error2, fila2)=>{
+                        if(error2){
+                            throw error2
+                        }else{
+                            res.redirect(`/admininventario`)
+                            return next()
+                        }
+                    })
+                }
+            }) 
+        }
+
+    } catch (error) {
+        console.log(error)
+        return next()
+    }
+}
+exports.deleteFromInvent = async(req, res, next)=>{
+    try {
+        //Calculamos el movimiento
+        let registro = req.query.registro
+        //Recibimos los datos
+        let movimiento = {
+            usuario: req.query.usuario,
+            producto: req.query.producto,
+            cantidad: -1 * req.query.cantidad,
+            fecha: new Date()
+        }
+        
+        //Primero registramos el movimiento
+        conexion.query('INSERT INTO op016_movimientos_inventario SET ?', movimiento, (error, fila)=>{
+            if(error){
+                throw error
+            }else{
+                //Hacemos el update en el inventario
+                conexion.query('DELETE FROM cat020_inventario WHERE folio = ?', [registro], (error2, fila2)=>{
+                    if(error2){
+                        throw error2
+                    }else{
+                        res.redirect(`/admininventario`)
+                        return next()
+                    }
+                })
+            }
+        }) 
+    } catch (error) {
+        console.log(error)
+        return next()
+    }
+}

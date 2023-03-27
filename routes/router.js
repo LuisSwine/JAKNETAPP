@@ -59,7 +59,7 @@ router.post('/login', authController.login)
             })
             //#2.2.1.2. REPORTE DE ASISTENCIA
             router.get('/reporteAsistencia', authController.isAuthenticated, authController.reporteAsistencia, (req, res)=>{
-                res.render('reporteAsistencia', {user: req. user, asistencias: req.asistencias, flag: req.query.flag})
+                res.render('reporteAsistencia', {user: req.user, asistencias: req.asistencias, flag: req.query.flag})
             })
         //*-Funcion #2.2.2. Crear Usuarios
             //#2.2.2.1. Formulario para registrar un nuevo usuario
@@ -303,6 +303,8 @@ router.post('/login', authController.login)
                 router.get('/createcotizacionProyecto', proyectosController.createCotizacionProyecto)
                 //#3.4.3.5.2. ELIMINAR COTIZACION - FUNCION
                 router.get('/deleteCotiProy', proyectosController.deleteCotizacion)
+            //#3.4.5.6. ELIMINAR PROYECTO
+                router.get('/deleteProyectoGrl', proyectosController.deleteProyectoGrl)
         //*- FUNCION #3.4.4. VIATICOS DE PROYECTO
             //#3.4.4.1. PAGINA PRINCIPAL
             router.get('/proyectViaticos', authController.isAuthenticated, authController.selectProyect, authController.datosViaticosProyectos, authController.selectDepositosProyecto, authController.selectComprobacionesProyecto, (req, res)=>{
@@ -508,6 +510,12 @@ router.post('/login', authController.login)
             })
             //#4.5.2.2. FUNCION
             router.post('/moverInventario', authController.moverInventario)
+        //*- FUNCION #4.5.2-1. EDITAR REGISTRO DEL INVENARIO
+            //#4.5.2-1.1 FUNCION
+            router.get('/modificarInvent', inventarioController.editFromInvent)
+        //*- FUNCION #4.5.2-2. ELIMINAR REGISTRO DEL INVENARIO
+            //#4.5.2-1.1 FUNCION
+            router.get('/deleteFromInvent', inventarioController.deleteFromInvent)
         //*- FUNCION #4.5.3. GESTIONAR UNIDADES
             //#4.5.3.1. ADMINISTRADOR DE UNIDADES
             router.get('/adminunidades', authController.isAuthenticated, unidadesController.selectUnits, (req, res)=>{
@@ -551,7 +559,7 @@ router.post('/login', authController.login)
         //*- FUNCION #5.1.3. GENERAR REPORTE GENERAL
             //#5.1.3.1. PAGINA DE REPORTES
             router.get('/exportData', authController.isAuthenticated, viaticosController.selectDepositos, viaticosController.selectComprobaciones, (req, res)=>{
-                res.render('Viaticos/exportData', {user: req.user, depositos: req.depositos, comprobaciones: req.comprobaciones, data: req.query.data, usuario: req.query.usuario})
+                res.render('Viaticos/exportData2', {user: req.user, depositos: req.depositos, comprobaciones: req.comprobaciones, data: req.query.data, usuario: req.query.usuario})
             })
         //*- FUNCION #5.1.4. ELIMINAR COMPROBANTE
             //#5.1.4.1. FUNCION

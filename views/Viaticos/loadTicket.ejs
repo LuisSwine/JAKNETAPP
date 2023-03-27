@@ -55,8 +55,17 @@
                                                 <input type="number" value="<%= user.folio %>" class="form-control" id="emisor" name="emisor" hidden>
                                             </div>
                                             <div class="form-group">
+                                                <label for="tipoComprobante">TIPO DE COMPROBANTE</label>
+                                                <select name="tipoComprobante" id="tipoComprobante" class="form-control" onchange="changeInputType()">
+                                                    <option disabled selected>--Seleccione--</option>
+                                                    <option value="0">Ticket</option>
+                                                    <option value="1">Factura</option>
+                                                    <option value="2">Enlace</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
                                                 <label>ENLACE DE COMPROBANTE</label>
-                                                <input type="url" class="form-control" id="enlace" name="enlace" placeholder="Inserte el enlace del comprobante" required>
+                                                <input type="url" class="form-control" id="file" name="file" placeholder="Inserte el enlace del comprobante" required>
                                                 <span class="help-block">
                                                     <small>Acceda a su carpeta <a href="<%= user.documentacion %>" target="_blank">aquí</a></small>
                                                 </span>
@@ -99,6 +108,17 @@
             }
         })
         document.getElementById('beneficiario').value = nombre
+    }
+    function changeInputType(){
+        let typeSelected = document.getElementById('tipoComprobante').value;
+        let tipo;
+        if(typeSelected == 2){
+            tipo = 'url';
+        }else{
+            tipo = 'file';
+        }
+
+        document.getElementById('file').setAttribute('type', tipo);
     }
 </script>
 
